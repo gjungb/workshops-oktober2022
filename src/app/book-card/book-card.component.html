@@ -1,1 +1,7 @@
 <p>book-card works!</p>
+
+<h3 [style.backgroundColor]="color">{{ content?.title }}</h3>
+
+<h4 [ngStyle]="customStyle">{{ content?.author }}</h4>
+
+<button (click)="handleDetailClick($event)">Details</button>
