@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { delay, Observable, of } from 'rxjs';
+import { Inject, Injectable } from '@angular/core';
+import { catchError, Observable, of } from 'rxjs';
 import { Book } from '../model/book';
 
 @Injectable({
@@ -28,14 +28,27 @@ export class BookApiService {
     },
   ];
 
-  constructor(private readonly client: HttpClient) {}
+  /**
+   *
+   * @param client
+   * @param URL
+   */
+  constructor(
+    private readonly client: HttpClient,
+    @Inject('REST_API') private readonly URL: string
+  ) {}
 
   /**
    *
    * @returns
    */
   getAll(): Observable<Book[]> {
-    const url = 'http://localhost:4730/books';
-    return this.client.get<Book[]>(url).pipe(delay(5_000));
+    const url = this.URL;
+    return this.client.get<Book[]>(url).pipe(
+      catchError((err, caught) => {
+        console.warn(err);
+        return of(this.books);
+      })
+    );
   }
 }

@@ -10,7 +10,12 @@ import { BookListComponent } from './book-list/book-list.component';
 @NgModule({
   declarations: [AppComponent, BookCardComponent, BookListComponent],
   imports: [BrowserModule, AppRoutingModule, HttpClientModule],
-  providers: [],
+  providers: [
+    {
+      provide: 'REST_API',
+      useValue: 'http://localhost:4730/books',
+    },
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
