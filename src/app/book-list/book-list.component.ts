@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { interval, tap } from 'rxjs';
 import { Book } from '../model/book';
+import { BookApiService } from '../shared/book-api.service';
 
 /**
  * Stateful Component
@@ -11,35 +13,33 @@ import { Book } from '../model/book';
 })
 export class BookListComponent implements OnInit {
   /**
-   * @todo retrieve list from outside (???) / web (???)
+   * Retrieve list from outside
    */
-  books: Book[] = [
-    {
-      title: 'How to win friends',
-      author: 'Dale Carnegie',
-      abstract: 'How to Win Friends and Influence ...',
-    },
-    {
-      title: 'The Willpower Instinct: How Self-Control Works ...',
-      author: 'Kelly McGonigal',
-      abstract: 'Based on Stanford University ...',
-    },
-    {
-      author: 'Simon Sinek',
-      title: 'Start with WHY',
-      abstract: "START WITH WHY shows that the leaders who've ...",
-    },
-  ];
+  books?: Book[];
 
   /**
-   * @todo Dependency Injection
+   * Dependency Injection
    */
-  constructor() {}
+  constructor(private readonly bookApi: BookApiService) {}
 
   /**
    * React to state change
    */
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    // ticker
+    const ticker$ = interval(2_000);
+
+    // @todo remove memory leak
+    ticker$.pipe(tap((x) => console.log(x))).subscribe();
+
+    this.bookApi
+      .getAll()
+      .pipe(tap((x) => console.log(x)))
+      .subscribe({
+        next: (value) => (this.books = value),
+        complete: () => console.log('Books loaded'),
+      });
+  }
 
   /**
    *
