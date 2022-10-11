@@ -1,5 +1,14 @@
-import { Component, OnInit } from '@angular/core';
-import { interval, tap } from 'rxjs';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import {
+  combineLatest,
+  interval,
+  map,
+  Observable,
+  startWith,
+  Subject,
+  Subscription,
+  tap,
+} from 'rxjs';
 import { Book } from '../model/book';
 import { BookApiService } from '../shared/book-api.service';
 
@@ -11,11 +20,41 @@ import { BookApiService } from '../shared/book-api.service';
   templateUrl: './book-list.component.html',
   styleUrls: ['./book-list.component.scss'],
 })
-export class BookListComponent implements OnInit {
+export class BookListComponent implements OnInit, OnDestroy {
   /**
    * Retrieve list from outside
    */
   books?: Book[];
+
+  /**
+   *
+   */
+  books$: Observable<Book[]> = this.bookApi.getAll().pipe(startWith([]));
+
+  /**
+   *
+   */
+  ticker$: Observable<number> = interval(3_000).pipe(
+    startWith(0),
+    map((v) => v + 1)
+  );
+
+  /**
+   *
+   */
+  ui$ = combineLatest([this.books$, this.ticker$]).pipe(
+    map(([books, ticker]) => ({ books, ticker }))
+  );
+
+  /**
+   *
+   */
+  private sub = Subscription.EMPTY;
+
+  /**
+   *
+   */
+  private destroy$ = new Subject<void>();
 
   /**
    * Dependency Injection
@@ -29,16 +68,30 @@ export class BookListComponent implements OnInit {
     // ticker
     const ticker$ = interval(2_000);
 
-    // @todo remove memory leak
-    ticker$.pipe(tap((x) => console.log(x))).subscribe();
+    // remove memory leak
+    this.sub = ticker$.pipe(tap((x) => console.log(x))).subscribe();
 
-    this.bookApi
-      .getAll()
-      .pipe(tap((x) => console.log(x)))
-      .subscribe({
-        next: (value) => (this.books = value),
-        complete: () => console.log('Books loaded'),
-      });
+    /**
+     *
+     */
+    // this.bookApi
+    //   .getAll()
+    //   .pipe(
+    //     tap((x) => console.log(x)),
+    //     takeUntil(this.destroy$)
+    //   )
+    //   .subscribe({
+    //     next: (value) => (this.books = value),
+    //     complete: () => console.log('Books loaded'),
+    //   });
+  }
+
+  /**
+   *
+   */
+  ngOnDestroy(): void {
+    this.sub.unsubscribe();
+    this.destroy$.next();
   }
 
   /**
