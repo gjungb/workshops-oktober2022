@@ -10,6 +10,7 @@ import { BookDetailComponent } from './book-detail/book-detail.component';
 import { BookListComponent } from './book-list/book-list.component';
 import { BookNewComponent } from './book-new/book-new.component';
 import { AppIsbnPipe } from './shared/app-isbn.pipe';
+import { CartCountComponent } from './cart-count/cart-count.component';
 
 @NgModule({
   declarations: [
@@ -19,6 +20,7 @@ import { AppIsbnPipe } from './shared/app-isbn.pipe';
     AppIsbnPipe,
     BookDetailComponent,
     BookNewComponent,
+    CartCountComponent,
   ],
   imports: [
     BrowserModule,

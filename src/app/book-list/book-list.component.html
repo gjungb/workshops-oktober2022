@@ -2,13 +2,9 @@
 
 <ng-container *ngIf="ui$ | async as ui">
   <p>{{ ui.ticker }}</p>
-  <p>{{ ui.books.length }}</p>
-</ng-container>
-
-<ng-container *ngIf="books$ | async as books">
   <ol>
-    <li *ngFor="let book of books">
-      <a [routerLink]=" ['detail', book.isbn] ">Details</a>
+    <li *ngFor="let book of ui.books">
+      <a [routerLink]="['detail', book.isbn]">Details</a>
       <app-book-card
         (detailClick)="goToBookDetails($event)"
         [myBook]="book"

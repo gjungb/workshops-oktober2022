@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { CartService } from './shared/cart.service';
 
 @Component({
   selector: 'app-root',
@@ -8,10 +7,4 @@ import { CartService } from './shared/cart.service';
 })
 export class AppComponent {
   title = 'workshops-oktober';
-
-  visible = true;
-
-  books$ = this.cart.books$;
-
-  constructor(private readonly cart: CartService) {}
 }
