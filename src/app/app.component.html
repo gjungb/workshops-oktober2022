@@ -1,6 +1,7 @@
 <h1>Willkommen bei {{ title }}</h1>
-<p>Hi</p>
 
-<button (click)="visible = !visible">Toggle</button>
+<p>{{ (books$ | async)?.length }} books in your cart</p>
 
-<app-book-list *ngIf="visible"></app-book-list>
+<app-book-new></app-book-new>
+
+<router-outlet></router-outlet>

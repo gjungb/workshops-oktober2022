@@ -1,0 +1,9 @@
+<p>book-new works!</p>
+
+<form [formGroup]="form" (ngSubmit)="saveBook(form.value)">
+    <input type="text" formControlName="title">
+    <p *ngIf="form.get('title')?.hasError('required')">
+        Bitte ausfüllen!
+    </p>
+    <button type="submit" [disabled]="form.invalid">Abschicken</button>
+</form>

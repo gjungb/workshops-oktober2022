@@ -1,4 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import {
   combineLatest,
   interval,
@@ -11,6 +12,7 @@ import {
 } from 'rxjs';
 import { Book } from '../model/book';
 import { BookApiService } from '../shared/book-api.service';
+import { CartService } from '../shared/cart.service';
 
 /**
  * Stateful Component
@@ -59,7 +61,11 @@ export class BookListComponent implements OnInit, OnDestroy {
   /**
    * Dependency Injection
    */
-  constructor(private readonly bookApi: BookApiService) {}
+  constructor(
+    private readonly bookApi: BookApiService,
+    private readonly router: Router,
+    private readonly cart: CartService
+  ) {}
 
   /**
    * React to state change
@@ -102,5 +108,7 @@ export class BookListComponent implements OnInit, OnDestroy {
     // effect
     console.log('Navigate to book details, soon...');
     console.log(book);
+    // this.router.navigate(['books', 'detail', book.isbn], {});
+    this.cart.addBook(book);
   }
 }

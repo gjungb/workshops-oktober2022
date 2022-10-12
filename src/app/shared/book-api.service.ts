@@ -54,4 +54,14 @@ export class BookApiService {
       })
     );
   }
+
+  /**
+   *
+   * @param isbn
+   * @returns
+   */
+  getBookByIsbn(isbn: string): Observable<Book> {
+    const url = `${this.URL}/${isbn}`;
+    return this.client.get<Book>(url);
+  }
 }
