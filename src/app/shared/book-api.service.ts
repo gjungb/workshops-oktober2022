@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Inject, Injectable } from '@angular/core';
-import { catchError, Observable, of } from 'rxjs';
+import { catchError, map, Observable, of } from 'rxjs';
 import { Book } from '../model/book';
 
 @Injectable({
@@ -8,7 +8,7 @@ import { Book } from '../model/book';
 })
 export class BookApiService {
   /**
-   * @todo retrieve list from outside (???) / web (???)
+   * retrieve list from outside (???) / web (???)
    */
   private books: Book[] = [
     {
@@ -63,5 +63,19 @@ export class BookApiService {
   getBookByIsbn(isbn: string): Observable<Book> {
     const url = `${this.URL}/${isbn}`;
     return this.client.get<Book>(url);
+  }
+
+  /**
+   *
+   * @param isbn
+   * @returns
+   */
+  hasBook(isbn: string | null): Observable<boolean> {
+    return isbn
+      ? this.getBookByIsbn(isbn).pipe(
+          catchError(() => of(false)),
+          map(() => true)
+        )
+      : of(false);
   }
 }

@@ -1,16 +1,17 @@
 import { Injectable } from '@angular/core';
 import {
   ActivatedRouteSnapshot,
-  CanActivate,
+  Resolve,
   RouterStateSnapshot,
 } from '@angular/router';
 import { Observable } from 'rxjs';
-import { BookApiService } from './shared/book-api.service';
+import { Book } from '../model/book';
+import { BookApiService } from './book-api.service';
 
 @Injectable({
   providedIn: 'root',
 })
-export class BookExistsGuard implements CanActivate {
+export class BookResolver implements Resolve<Book> {
   /**
    *
    * @param api
@@ -23,10 +24,10 @@ export class BookExistsGuard implements CanActivate {
    * @param _state
    * @returns
    */
-  canActivate(
+  resolve(
     route: ActivatedRouteSnapshot,
     _state: RouterStateSnapshot
-  ): Observable<boolean> {
-    return this.api.hasBook(route.paramMap.get('isbn'));
+  ): Observable<Book> {
+    return this.api.getBookByIsbn(route.paramMap.get('isbn') as string);
   }
 }

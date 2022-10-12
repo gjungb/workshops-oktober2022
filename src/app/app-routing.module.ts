@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { BookDetailComponent } from './book-detail/book-detail.component';
 import { BookExistsGuard } from './book-exists.guard';
 import { BookListComponent } from './book-list/book-list.component';
+import { BookResolver } from './shared/book.resolver';
 
 // @todo add route configuration(s)
 const routes: Routes = [
@@ -23,7 +24,7 @@ const routes: Routes = [
         component: BookDetailComponent,
         canActivate: [BookExistsGuard],
         resolve: {
-          book: BookExistsGuard,
+          book: BookResolver,
         },
       },
     ],
